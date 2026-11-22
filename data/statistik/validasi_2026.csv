@@ -1,0 +1,41 @@
+AUC_2026,0.616
+
+KELAS,kelas,sel,%luas,titik,%hotspot,rasio,sel_berhotspot,%sel_berhotspot
+,Rendah,6773,18.24,1989,8.15,0.447,768,10.05
+,Sedang,29865,80.45,20740,84.95,1.056,6762,88.52
+,Tinggi,486,1.31,1684,6.9,5.269,109,1.43
+
+KABUPATEN,kab,ib100_rata2,kelas_kab,hotspot_2026,luas_km2,kepadatan_per_100km2
+,Balangan,42.16,Sedang,603,1830,32.95
+,Banjar,43.39,Sedang,4327,4590,94.27
+,Barito Kuala,49.47,Sedang,1527,2422,63.05
+,Hulu Sungai Selatan,46.16,Sedang,3498,1699,205.89
+,Hulu Sungai Tengah,41.2,Sedang,484,1577,30.69
+,Hulu Sungai Utara,49.76,Sedang,1341,904,148.34
+,Kota Banjarbaru,43.74,Sedang,568,304,186.84
+,Kota Banjarmasin,38.69,Rendah,4,99,4.04
+,Kotabaru,42.74,Sedang,3753,9351,40.13
+,Tabalong,41.29,Sedang,498,3471,14.35
+,Tanah Bumbu,42.93,Sedang,2264,4887,46.33
+,Tanah Laut,44.41,Sedang,2230,3833,58.18
+,Tapin,46.51,Sedang,3316,2157,153.73
+
+HOTSPOT_PER_KELAS_KAB,kelas_kab,n_kab,rata2_hotspot,median_hotspot
+,Rendah,1,4.0,4.0
+,Sedang,12,2034.1,1878.5
+,Tinggi,0,,
+KORELASI,jumlah hotspot,pearson,0.323,p,0.281,spearman,0.484,p,0.0941
+KORELASI,kepadatan hotspot,pearson,0.61,p,0.027,spearman,0.835,p,0.0004
+
+SENSITIVITAS,skenario,w_lulc,w_gambut,w_hujan,w_akses,w_lereng,AUC_2026,%luas_Tinggi,%luas_Sedang
+,dasar,0.394,0.237,0.237,0.066,0.066,0.616,1.31,80.45
+,lulc +20%,0.473,0.206,0.206,0.057,0.057,0.62,1.36,60.27
+,lulc -20%,0.316,0.268,0.268,0.074,0.074,0.616,0.7,87.23
+,gambut +20%,0.37,0.285,0.222,0.061,0.061,0.616,0.16,61.48
+,gambut -20%,0.419,0.19,0.252,0.07,0.07,0.616,3.8,83.35
+,hujan +20%,0.37,0.222,0.285,0.061,0.061,0.616,1.37,89.51
+,hujan -20%,0.419,0.252,0.19,0.07,0.07,0.616,1.14,45.25
+,akses +20%,0.389,0.234,0.234,0.079,0.065,0.605,1.32,80.07
+,akses -20%,0.4,0.241,0.241,0.052,0.066,0.627,1.31,71.61
+,lereng +20%,0.389,0.234,0.234,0.065,0.079,0.627,1.31,71.62
+,lereng -20%,0.4,0.241,0.241,0.066,0.052,0.605,1.34,80.05
