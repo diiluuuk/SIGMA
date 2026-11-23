@@ -22,8 +22,10 @@
       </div>
     </div>
     <div class="meta">
-      <span class="chip" id="chip-periode"></span>
-      <span class="chip ghost" id="chip-update"></span>
+      <span class="meta-item" id="chip-periode"></span>
+      <span class="meta-sep" aria-hidden="true">|</span>
+      <span class="meta-item meta-upd" id="chip-update"></span>
+      <span class="meta-sep meta-upd" aria-hidden="true">|</span>
       <button class="link-btn" id="btn-sumber">Sumber data</button>
     </div>
     <button class="icon-btn only-mobile" id="btn-kanan" aria-label="Buka panel statistik">▤</button>
@@ -57,13 +59,12 @@
 
       <section class="tab-body" id="tab-wilayah">
         <div class="block">
-          <label class="lbl" for="cari-kab">Cari kabupaten/kota</label>
-          <input id="cari-kab" list="dl-kab" placeholder="Ketik nama wilayah…" autocomplete="off">
+          <input id="cari-kab" list="dl-kab" placeholder="Cari kab/kota atau klik pada peta…" autocomplete="off" aria-label="Cari kabupaten/kota">
           <datalist id="dl-kab"></datalist>
         </div>
-        <div id="info-wilayah" class="block"><p class="muted">Pilih wilayah dari daftar di bawah, kotak pencarian, atau klik peta.</p></div>
+        <div id="info-wilayah" class="block" hidden></div>
         <div class="block">
-          <h3>Peringkat prioritas penanganan (2026)</h3>
+          <h3>Prioritas penanganan 2026</h3>
           <div id="daftar-prioritas" class="muted">Memuat…</div>
         </div>
       </section>
@@ -90,11 +91,11 @@
       <div class="block">
         <div class="stat-head">
           <h3 id="stat-judul">Ringkasan Kalimantan Selatan</h3>
-          <span class="chip small" id="stat-tahun"></span>
+          <span class="tag" id="stat-tahun"></span>
         </div>
         <div class="cards" id="cards"></div>
       </div>
-      <div class="block chart-block"><h4>Luas wilayah per kelas bahaya</h4><div class="chart-box sm"><canvas id="ch-kelas"></canvas></div></div>
+      <div class="block chart-block"><h4>Luas wilayah per kelas bahaya</h4><div class="chart-box donut"><canvas id="ch-kelas"></canvas></div></div>
       <div class="block chart-block"><h4>Distribusi kelas bahaya per kabupaten/kota</h4><div class="chart-box tall"><canvas id="ch-kab"></canvas></div></div>
       <div class="block chart-block"><h4>Jumlah hotspot per tahun</h4><div class="chart-box"><canvas id="ch-hotspot"></canvas></div></div>
       <div class="block chart-block"><h4>Intensitas curah hujan Juni–Oktober</h4><div class="chart-box"><canvas id="ch-hujan"></canvas></div></div>
