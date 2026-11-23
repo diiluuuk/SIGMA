@@ -144,12 +144,13 @@ const Layers = {
           <div class="lg-scale"><span>≤ ${L_.stops[0][1]}</span><span>40</span><span>70</span><span>≥ ${L_.stops.at(-1)[1]}</span></div></div>`);
         continue;
       }
-      const items = L_.items === "tutupanLahan" ? CONFIG.tutupanLahan.slice(0, 8).map(([n, col, sk]) => [col, `${n} · skor ${sk}`]) : L_.items;
+      const items = L_.items === "tutupanLahan" ? CONFIG.tutupanLahan.slice(0, 8).map(([n, col, sk]) => [col, n, sk]) : L_.items;
       const cls = L_.type === "garis" ? "lg-sw line" : L_.type === "titik" ? "lg-sw dot" : "lg-sw";
       let extra = "";
       if (c.type === "hotspot" && this.st[c.id].layer) extra = `<div class="muted">${U.n(this.st[c.id].layer._jumlah)} titik ditampilkan${this.kabFilter ? " di " + U.esc(this.kabFilter) : ""}</div>`;
-      parts.push(`<div class="lg-sec"><div class="lg-title">${judul}</div>` + items.map(([col, t]) =>
-        `<div class="lg-item"><span class="${cls}" style="${L_.type === "garis" ? "border-top-color" : "background"}:${col}"></span><span>${U.esc(t)}</span></div>`).join("") + extra + `</div>`);
+      const adaSkor = items.some(it => it[2] !== undefined);
+      parts.push(`<div class="lg-sec"><div class="lg-title">${judul}${adaSkor ? '<span class="lg-skor-h">Skor</span>' : ""}</div>` + items.map(([col, t, sk]) =>
+        `<div class="lg-item"><span class="${cls}" style="${L_.type === "garis" ? "border-top-color" : "background"}:${col}"></span><span class="lg-txt">${U.esc(t)}</span>${sk !== undefined ? `<span class="lg-skor">${sk}</span>` : ""}</div>`).join("") + extra + `</div>`);
     }
     return parts.join("") || `<p class="muted">Tidak ada layer aktif.</p>`;
   },
