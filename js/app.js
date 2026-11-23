@@ -215,17 +215,22 @@ const App = {
     const d = (Stats.d.dampak || []).slice().sort((a, b) => a.peringkat_prioritas - b.peringkat_prioritas);
     if (!d.length) { box.textContent = "Data belum tersedia"; return; }
     box.classList.remove("muted"); box.innerHTML = "";
+    const tb = U.el("table", { class: "attr" }, `<thead><tr><th class="r">No.</th><th>Kab/kota</th><th class="r">Jiwa</th><th class="r">% Tinggi</th></tr></thead>`);
+    const body = U.el("tbody");
     d.forEach(r => {
-      const it = U.el("div", { class: "prio" }, `<span class="n${r.peringkat_prioritas <= 3 ? " top" : ""}">${r.peringkat_prioritas}</span>
-        <span>${U.esc(r.kab)}</span><span class="x">${U.n(r.jiwa_terpapar)} jiwa · ${U.pct(r.pct_tinggi, 2)}</span>`);
-      it.onclick = () => this.pilihKab(r.kab);
-      box.appendChild(it);
+      const tr = U.el("tr", { class: "klik" }, `<td class="r idx">${String(r.peringkat_prioritas).padStart(2, "0")}.</td><td>${U.esc(r.kab)}</td>
+        <td class="r">${U.n(r.jiwa_terpapar)}</td><td class="r">${U.n(r.pct_tinggi, 2)}</td>`);
+      tr.onclick = () => this.pilihKab(r.kab);
+      body.appendChild(tr);
     });
+    tb.appendChild(body); box.appendChild(tb);
+    box.appendChild(U.el("p", { class: "note" }, "Urutan = rata-rata peringkat jiwa terpapar dan % luas kelas Tinggi."));
   },
 
   infoWilayah() {
     const box = document.getElementById("info-wilayah");
-    if (!this.kab) { box.innerHTML = `<p class="muted">Pilih wilayah dari daftar di bawah, kotak pencarian, atau klik peta lalu tekan "Pilih wilayah ini".</p>`; return; }
+    if (!this.kab) { box.innerHTML = ""; box.hidden = true; return; }
+    box.hidden = false;
     const r = Stats.rowKab(this.kab, this.tahun), d = Stats.rowDampak(this.kab);
     if (!r) { box.innerHTML = `<h3>${U.esc(this.kab)}</h3><p class="muted">Data belum tersedia</p>`; return; }
     const K = CONFIG.kelas;

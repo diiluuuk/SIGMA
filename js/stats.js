@@ -20,26 +20,21 @@ const Stats = {
     document.getElementById("stat-judul").textContent = kab ? `Ringkasan ${kab}` : "Ringkasan Kalimantan Selatan";
     document.getElementById("stat-tahun").textContent = tahun;
     const r = kab ? this.rowKab(kab, tahun) : this.rowTahun(tahun);
-    const kosong = (k) => `<div class="card empty"><div class="k">${k}</div><div class="v">Data belum tersedia</div></div>`;
-    if (!r) { box.innerHTML = ["Luas wilayah studi", "Bahaya rendah", "Bahaya sedang", "Bahaya tinggi", "Hotspot", "Penduduk zona tinggi"].map(kosong).join(""); return; }
+    const row = (k, v, p, col, note) => `<tr><td class="k">${col ? `<span class="sq" style="background:${col}"></span>` : ""}${k}${note ? `<span class="nt">${note}</span>` : ""}</td>
+      <td class="v">${v}</td><td class="p">${p ?? ""}</td></tr>`;
+    if (!r) { box.innerHTML = `<table class="mtab"><tbody>${row("Data belum tersedia", "–", "")}</tbody></table>`; return; }
     const luas = kab ? r.luas_km2 : r.luas_total_km2;
-    const hs = kab ? r.hotspot_titik : r.hotspot_titik;
-    const card = (k, v, s, col, wide) => `<div class="card${wide ? " wide" : ""}">${col ? `<span class="bar" style="background:${col}"></span>` : ""}
-      <div class="k">${k}</div><div class="v">${v}</div>${s ? `<div class="s">${s}</div>` : ""}</div>`;
-    let pend;
-    if (tahun !== CONFIG.tahunDampak) pend = card("Penduduk di zona Tinggi", "—", `Analisis dampak hanya untuk ${CONFIG.tahunDampak}`, "#7a1d1d", true);
-    else {
-      const jiwa = kab ? this.rowDampak(kab)?.jiwa_terpapar : this.d.dampak?.reduce((a, x) => a + (x.jiwa_terpapar || 0), 0);
-      pend = jiwa === undefined || jiwa === null ? kosong("Penduduk di zona Tinggi")
-        : card("Penduduk di zona Tinggi", U.n(jiwa) + " jiwa", "WorldPop terkalibrasi BPS 2026", "#7a1d1d", true);
-    }
     const kel = CONFIG.kelas;
-    box.innerHTML =
-      card("Luas wilayah studi", U.n(luas) + " km²", kab ? "Sel 1 km di kab/kota" : "13 kabupaten/kota", "#1f3b2d") +
-      card("Hotspot " + tahun, U.n(hs) + " titik", tahun === 2026 ? "Jan–Okt (uji)" : "Data kalibrasi", "#111") +
-      card("Bahaya rendah", U.n(r.rendah_km2) + " km²", U.pct(r.pct_rendah ?? 100 * r.rendah_km2 / luas), kel[0].warna) +
-      card("Bahaya sedang", U.n(r.sedang_km2) + " km²", U.pct(r.pct_sedang ?? 100 * r.sedang_km2 / luas), kel[1].warna) +
-      card("Bahaya tinggi", U.n(r.tinggi_km2) + " km²", U.pct(r.pct_tinggi ?? 100 * r.tinggi_km2 / luas, 2), kel[2].warna, true) + pend;
+    let jiwa = null;
+    if (tahun === CONFIG.tahunDampak) jiwa = kab ? this.rowDampak(kab)?.jiwa_terpapar : this.d.dampak?.reduce((a, x) => a + (x.jiwa_terpapar || 0), 0);
+    box.innerHTML = `<table class="mtab"><thead><tr><th>Atribut</th><th class="v">Nilai</th><th class="p">%</th></tr></thead><tbody>` +
+      row("Luas wilayah studi", U.n(luas) + " km²", "", null, kab ? "sel 1 km" : "13 kab/kota") +
+      row("Kelas Rendah", U.n(r.rendah_km2) + " km²", U.n(r.pct_rendah ?? 100 * r.rendah_km2 / luas, 1), kel[0].warna) +
+      row("Kelas Sedang", U.n(r.sedang_km2) + " km²", U.n(r.pct_sedang ?? 100 * r.sedang_km2 / luas, 1), kel[1].warna) +
+      row("Kelas Tinggi", U.n(r.tinggi_km2) + " km²", U.n(r.pct_tinggi ?? 100 * r.tinggi_km2 / luas, 2), kel[2].warna) +
+      row("Titik api " + tahun, U.n(r.hotspot_titik), "", null, tahun === 2026 ? "Jan–Okt, uji" : "Jun–Okt, kalibrasi") +
+      row("Jiwa di zona Tinggi", jiwa === null || jiwa === undefined ? "–" : U.n(jiwa), "", null, tahun === CONFIG.tahunDampak ? "WorldPop × BPS" : "hanya 2026") +
+      `</tbody></table>`;
   },
 
   /* ---------- grafik ---------- */
@@ -61,11 +56,13 @@ const Stats = {
 
     // 1. luas per kelas
     const r = kab ? this.rowKab(kab, tahun) : this.rowTahun(tahun);
+    const totKl = r ? r.rendah_km2 + r.sedang_km2 + r.tinggi_km2 : 0;
     this.draw("ch-kelas", r ? { type: "doughnut",
-      data: { labels: K.map(k => k.nama), datasets: [{ data: [r.rendah_km2, r.sedang_km2, r.tinggi_km2], backgroundColor: K.map(k => k.warna), borderWidth: 1 }] },
-      options: { responsive: true, maintainAspectRatio: false, cutout: "58%",
-        plugins: { legend: { position: "right", labels: { boxWidth: 12 } },
-          tooltip: { callbacks: { label: c => ` ${c.label}: ${U.n(c.raw)} km²` } } } } } : null);
+      data: { labels: K.map((k, i) => `${k.nama}  ${U.n(100 * [r.rendah_km2, r.sedang_km2, r.tinggi_km2][i] / totKl, i === 2 ? 2 : 1)}%`),
+        datasets: [{ data: [r.rendah_km2, r.sedang_km2, r.tinggi_km2], backgroundColor: K.map(k => k.warna), borderWidth: 1, borderColor: "#ffffff" }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: "62%", layout: { padding: 2 },
+        plugins: { legend: { position: "right", align: "center", labels: { boxWidth: 10, boxHeight: 10, padding: 6, font: { size: 11 } } },
+          tooltip: { callbacks: { label: c => ` ${K[c.dataIndex].nama}: ${U.n(c.raw)} km²` } } } } } : null);
 
     // 2. distribusi kelas per kab
     const rows = this.d.kab?.filter(x => x.tahun === tahun).sort((a, b) => b.pct_tinggi - a.pct_tinggi || b.pct_sedang - a.pct_sedang);
@@ -129,11 +126,12 @@ const Stats = {
       const ki = L_.findIndex(l => l[0] === "KELAS");
       const kelas = L_.slice(ki + 1, ki + 4);
       const kor = L_.filter(l => l[0] === "KORELASI");
-      let h = `<p>AUC 2026 = <b>${U.n(Number(auc[1]), 3)}</b></p><table class="tbl"><thead><tr><th>Kelas</th><th>% luas</th><th>% hotspot</th><th>Rasio</th></tr></thead><tbody>`;
-      kelas.forEach(c => (h += `<tr><td>${c[1]}</td><td>${U.n(+c[3], 2)}</td><td>${U.n(+c[5], 2)}</td><td><b>${U.n(+c[6], 2)}</b></td></tr>`));
-      h += `</tbody></table><p class="muted">Korelasi IB100 rata-rata kab/kota vs hotspot:</p><ul class="list">`;
-      kor.forEach(k => (h += `<li>${k[1]}: Pearson ${U.n(+k[3], 3)} (p ${U.n(+k[5], 3)}), Spearman ${U.n(+k[7], 3)} (p ${U.n(+k[9], 4)})</li>`));
-      return h + "</ul>";
+      let h = `<table class="tbl"><thead><tr><th>Kelas</th><th class="r">% luas</th><th class="r">% titik</th><th class="r">Rasio</th></tr></thead><tbody>`;
+      kelas.forEach(c => (h += `<tr><td>${c[1]}</td><td class="r">${U.n(+c[3], 2)}</td><td class="r">${U.n(+c[5], 2)}</td><td class="r"><b>${U.n(+c[6], 3)}</b></td></tr>`));
+      h += `</tbody></table><p class="note">AUC 2026 = ${U.n(Number(auc[1]), 3)}</p>`;
+      h += `<table class="tbl"><thead><tr><th>IB100 kab vs</th><th class="r">Pearson r</th><th class="r">Spearman ρ</th></tr></thead><tbody>`;
+      kor.forEach(k => (h += `<tr><td>${k[1]}</td><td class="r">${U.n(+k[3], 3)} (p ${U.n(+k[5], 3)})</td><td class="r">${U.n(+k[7], 3)} (p ${U.n(+k[9], 4)})</td></tr>`));
+      return h + "</tbody></table>";
     } catch (e) { return `<p class="muted">Data belum tersedia</p>`; }
   }
 };
