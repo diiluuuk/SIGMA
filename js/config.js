@@ -68,8 +68,8 @@ const CONFIG = {
         "< 100 cm": "#e6c79c", "tanpa keterangan (diasumsikan dangkal)": "#f3e3c3",
         "100-200 cm": "#c99a5b", "200-300 cm": "#8c5a2b", "> 300 cm": "#4a2c12" }, garis: "#5a3a1a" },
       legend: { type: "kategori", judul: "Kedalaman gambut", items: [
-        ["#e6c79c", "< 100 cm"], ["#f3e3c3", "Tidak tercatat (diasumsikan dangkal)"], ["#c99a5b", "100–200 cm"],
-        ["#8c5a2b", "200–300 cm"], ["#4a2c12", "> 300 cm"]] },
+        ["#e6c79c", "< 100 cm · skor 2"], ["#f3e3c3", "Tidak tercatat (diasumsikan dangkal) · skor 2"], ["#c99a5b", "100–200 cm · skor 3"],
+        ["#8c5a2b", "200–300 cm · skor 4"], ["#4a2c12", "> 300 cm · skor 5"]] },
       popup: [["kedalaman", "Kedalaman"], ["landform", "Landform"], ["skor_gbt", "Skor kerawanan"], ["luas_ha", "Luas (ha)", "ha"]],
       sumber: "Peta lahan gambut skala 1:50.000, BIG (2024)", tahunData: "2024", resolusi: "Vektor 1:50.000",
       kriteria: "C2 · bobot 0,237", deskripsi: "Poligon lahan gambut dan kelas kedalamannya dari atribut landform." },
@@ -77,7 +77,7 @@ const CONFIG = {
     { id: "curah_hujan", grup: "parameter", nama: "Curah hujan Jun–Okt", type: "image", temporal: true,
       file: "parameter/curah_hujan_{tahun}", opacity: 0.75, visible: false, status: "tersedia",
       legend: { type: "kategori", judul: "Curah hujan rata-rata (mm/bulan)", items: [
-        ["#b2182b", "< 100"], ["#ef8a62", "100 – 120"], ["#fddbc7", "120 – 150"], ["#67a9cf", "150 – 200"], ["#2166ac", "≥ 200"]] },
+        ["#b2182b", "< 100 · skor 5"], ["#ef8a62", "100 – 120 · skor 4"], ["#fddbc7", "120 – 150 · skor 3"], ["#67a9cf", "150 – 200 · skor 2"], ["#2166ac", "≥ 200 · skor 1"]] },
       sumber: "CHIRPS v3 bulanan (CHC UCSB), Google Earth Engine", tahunData: "2022–2026 (Juni–Oktober)",
       resolusi: "±5,5 km → grid 1 km", kriteria: "C3 · bobot 0,237",
       deskripsi: "Rata-rata curah hujan bulanan musim kemarau (Juni–Oktober) setiap tahun." },
@@ -85,7 +85,7 @@ const CONFIG = {
     { id: "kemiringan_lereng", grup: "parameter", nama: "Kemiringan lereng", type: "image",
       file: "parameter/kemiringan_lereng", opacity: 0.8, visible: false, status: "tersedia",
       legend: { type: "kategori", judul: "Kemiringan lereng (%)", items: [
-        ["#ffffcc", "0 – 2"], ["#c2e699", "2 – 8"], ["#78c679", "8 – 15"], ["#31a354", "15 – 25"], ["#006837", "25 – 40"], ["#00341c", "> 40"]] },
+        ["#ffffcc", "0 – 2 · skor 5"], ["#c2e699", "2 – 8 · skor 4"], ["#78c679", "8 – 15 · skor 3"], ["#31a354", "15 – 25 · skor 2"], ["#006837", "25 – 40 · skor 1"], ["#00341c", "> 40 · skor 1"]] },
       sumber: "Copernicus DEM GLO-30 (ESA), Google Earth Engine", tahunData: "DEM rilis 2021",
       resolusi: "30 m → rata-rata 1 km", kriteria: "C5 · bobot 0,066",
       deskripsi: "Lereng dihitung pada resolusi 30 m lalu dirata-ratakan per sel 1 km." },
@@ -93,7 +93,7 @@ const CONFIG = {
     { id: "aksesibilitas", grup: "parameter", nama: "Jarak ke jalan, sungai, kanal", type: "image",
       file: "parameter/aksesibilitas", opacity: 0.8, visible: false, status: "tersedia",
       legend: { type: "kategori", judul: "Jarak (Euclidean)", items: [
-        ["#d7191c", "< 1 km"], ["#fdae61", "1 – 2 km"], ["#ffffbf", "2 – 3 km"], ["#a6d96a", "3 – 5 km"], ["#1a9641", "≥ 5 km"]] },
+        ["#d7191c", "< 1 km · skor 5"], ["#fdae61", "1 – 2 km · skor 4"], ["#ffffbf", "2 – 3 km · skor 3"], ["#a6d96a", "3 – 5 km · skor 2"], ["#1a9641", "≥ 5 km · skor 1"]] },
       sumber: "OpenStreetMap (Geofabrik, 2026)", tahunData: "2026", resolusi: "100 m → titik tengah sel 1 km",
       kriteria: "C4 · bobot 0,066", deskripsi: "Jarak dari titik tengah sel ke jalan, sungai, kanal, atau parit terdekat." },
 

@@ -144,7 +144,7 @@ const Layers = {
           <div class="lg-scale"><span>≤ ${L_.stops[0][1]}</span><span>40</span><span>70</span><span>≥ ${L_.stops.at(-1)[1]}</span></div></div>`);
         continue;
       }
-      const items = L_.items === "tutupanLahan" ? CONFIG.tutupanLahan.slice(0, 8).map(([n, col]) => [col, n]) : L_.items;
+      const items = L_.items === "tutupanLahan" ? CONFIG.tutupanLahan.slice(0, 8).map(([n, col, sk]) => [col, `${n} · skor ${sk}`]) : L_.items;
       const cls = L_.type === "garis" ? "lg-sw line" : L_.type === "titik" ? "lg-sw dot" : "lg-sw";
       let extra = "";
       if (c.type === "hotspot" && this.st[c.id].layer) extra = `<div class="muted">${U.n(this.st[c.id].layer._jumlah)} titik ditampilkan${this.kabFilter ? " di " + U.esc(this.kabFilter) : ""}</div>`;
